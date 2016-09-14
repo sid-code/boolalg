@@ -42,3 +42,7 @@ This application is hosted [here][1].
 
  * API documentation
  * Use shunting-yard for parsing rather than recursive descent
+
+## License
+
+MIT
