@@ -1,8 +1,8 @@
 ## boolalg
 
 `boolalg` is a boolean algebra system written in Nim. It can simplify boolean
-algebra expressions in any number of variables to their minimal sum of
-products form. It comes with a parser to parse boolean algebra expressions (see
+algebra expressions in any number of variables to their minimal sum of products
+form. It comes with a parser to parse boolean algebra expressions (see
 `index.html` for instructions).
 
 ## Building
