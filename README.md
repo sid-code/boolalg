@@ -34,6 +34,10 @@ $ nim js -o:web/app.js app.nim
 
 To view the application, open `web/index.html`.
 
+This application is hosted [here][1].
+
+  [1]: http://www.public.asu.edu/~skulka20/boolalg/
+
 ## Todo List
 
  * API documentation
