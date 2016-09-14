@@ -249,38 +249,37 @@ proc simplifySumStep(exp: BExp): tuple[s: bool, e: BExp] =
   var terms = collectSumTerms(exp).map(simplifyProduct)
   filterFalseTerms(terms)
 
-  block outer:
-    for index1, term1 in terms:
-      for index2, term2 in terms:
-        if index1 != index2:
-          var terms1 = collectProdTerms(term1)
-          var terms2 = collectProdTerms(term2)
-          var commonTerms: seq[BExp]
-          newSeq(commonTerms, 0)
+  for index1, term1 in terms:
+    for index2, term2 in terms:
+      if index1 != index2:
+        var terms1 = collectProdTerms(term1)
+        var terms2 = collectProdTerms(term2)
+        var commonTerms: seq[BExp]
+        newSeq(commonTerms, 0)
 
-          for pindex1, pterm1 in terms1:
-            for pindex2, pterm2 in terms2:
-              if pterm1 == pterm2:
-                terms1.delete(pindex1)
-                terms2.delete(pindex2)
-                commonTerms.add(pterm1)
+        for pindex1, pterm1 in terms1:
+          for pindex2, pterm2 in terms2:
+            if pterm1 == pterm2:
+              terms1.delete(pindex1)
+              terms2.delete(pindex2)
+              commonTerms.add(pterm1)
 
-          if commonTerms.len > 0:
-            let outside = product(commonTerms)
-            let inside = product(terms1) + product(terms2)
-            let insideSimplified = simplify(inside)
+        if commonTerms.len > 0:
+          let outside = product(commonTerms)
+          let inside = product(terms1) + product(terms2)
+          let insideSimplified = simplify(inside)
 
-            if inside == insideSimplified:
-              continue
-            else:
-              result.s = true
-              terms[index1] = BFalse
-              terms[index2] = BFalse
-              terms.add(collectSumTerms(simplify(outside * insideSimplified)))
-              filterFalseTerms(terms)
+          if inside == insideSimplified:
+            continue
+          else:
+            result.s = true
+            terms[index1] = BFalse
+            terms[index2] = BFalse
+            terms.add(collectSumTerms(simplify(outside * insideSimplified)))
+            filterFalseTerms(terms)
 
-              result.e = sum(terms)
-              return
+            result.e = sum(terms)
+            return
 
 # constraint is a list of variables (or negative variables)
 # term is also that
