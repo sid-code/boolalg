@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <title>Boolean algebra</title>
+  </head>
+
+  <body>
+    <h2>Boolean algebra expression simplifier</h2>
+    <p>Enter an expression: <input type="text" id="expression"></input><button id="simplify">simplify</button>
+    <ul>
+      <li>use <tt>a+b</tt> for <tt>a OR b</tt></li>
+      <li>use <tt>ab</tt> for <tt>a AND b</tt></li>
+      <li>use parentheses as necessary</li>
+      <li>use <tt>-a</tt> for <tt>a'</tt></li>
+      <li><tt>a-bc</tt> will be interpreted as <tt>(a)(-b)(c)</tt></li>
+    </ul>
+
+    <p><span id="result">result will appear here</span>
+  </body>
+
+  <script src="./app.js"></script>
+
+</html>
