@@ -482,6 +482,10 @@ proc pruneImpliedTerms(simpl: BExpSimplifier) =
         let newProduct = product(checkTermPTerms)
         let prodsimpl = newBExpSimplifier(newProduct)
         prodsimpl.simplifyProduct()
+        if prodsimpl.current == BTrue:
+          simpl.addStep(BTrue, "If a sum contains TRUE, its value is TRUE")
+          return
+
         terms[index] = prodsimpl.current
         simpl.addStep(sum(terms), "Remove terms guaranteed to be true")
     else:
