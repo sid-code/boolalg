@@ -19,14 +19,14 @@ type
     of BENot:
       exp*: BExp
 
-  BExpSimplStep = tuple[res: BExp, comment: string, substep: BExpSimplifier]
+  BExpSimplStep* = tuple[res: BExp, comment: string, substep: BExpSimplifier]
   BExpSimplifier* = ref object
     history: seq[BExpSimplStep]
     current: BExp
 
 
-let BFalse = BExp(kind: BEFalse)
-let BTrue = BExp(kind: BETrue)
+let BFalse* = BExp(kind: BEFalse)
+let BTrue* = BExp(kind: BETrue)
 
 
 proc v*(s: string): BExp = BExp(kind: BEVar, bvar: BVar(s))
