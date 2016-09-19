@@ -38,10 +38,10 @@ proc `$`*(exp: BExp): string
 proc `==`*(lhs, rhs: BExp): bool
 
 proc addStep(simpl: BExpSimplifier, next: BExp, comment: string)
-proc newBExpSimplifier(exp: BExp): BExpSimplifier =
+proc newBExpSimplifier(exp: BExp, comment = "Start"): BExpSimplifier =
   new result
   newSeq(result.history, 0)
-  result.history.add( (exp, "Start", nil) )
+  result.history.add( (exp, comment, nil) )
   result.current = exp
 
 proc addStep(simpl: BExpSimplifier, next: BExp, comment: string) =
