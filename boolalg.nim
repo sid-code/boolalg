@@ -497,11 +497,11 @@ proc pruneImpliedTerms(simpl: BExpSimplifier) =
 
   simpl.simplifySum()
 
-proc simplifyFull*(exp: BExp): BExp =
+proc simplifyFull*(exp: BExp): BExpSimplifier =
   let simpl = newBExpSimplifier(exp)
   simpl.simplify()
 
-  return simpl.current
+  return simpl
 
 when isMainModule:
   import boolexpparser
