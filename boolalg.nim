@@ -27,6 +27,7 @@ proc `*`*(lhs: BExp, rhs: BExp): BExp = BExp(kind: BEProd, lhs: lhs, rhs: rhs)
 proc `+`*(lhs: BExp, rhs: BExp): BExp = BExp(kind: BESum, lhs: lhs, rhs: rhs)
 proc `-`*(exp: BExp): BExp = BExp(kind: BENot, exp: exp)
 proc `$`*(exp: BExp): string
+proc `==`*(lhs: BExp, rhs: BExp): bool
 
 proc containsAll[T](s1, s2: openArray[T]): bool =
   for el in s2:
