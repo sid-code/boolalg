@@ -1,0 +1,12 @@
+.step-res {
+  font: monospace;
+}
+
+.step-list {
+  width: 100%;
+
+}
+.step-item {
+  position: relative;
+  width: 100%px;
+}
