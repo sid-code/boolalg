@@ -95,18 +95,6 @@ proc containsAll[T](s1, s2: openArray[T]): bool =
 proc setEquals[T](s1, s2: openArray[T]): bool =
   s1.len == s2.len and s1.containsAll(s2)
 
-proc setCompare[T](s1, s2: openArray[T], common, extra: var seq[T]) =
-
-  for el in s1:
-    if el notin s2:
-      extra.add(el)
-    else:
-      common.add(el)
-
-  for el in s2:
-    if el notin s1:
-      extra.add(el)
-
 proc filterFalseTerms(terms: var seq[BExp]) =
   terms.keepItIf(it != BFalse)
 
@@ -445,16 +433,19 @@ proc checkImplication(constraints, term: seq[BExp]): bool =
     result = result or checkConstraint(collectProdTerms(constraint), term)
 
 proc collectCommonTerms(terms: seq[seq[BExp]]): seq[BExp] =
-  var common, extra: seq[BExp]
-  newSeq(common, 0)
-  newSeq(extra, 0)
+  newSeq(result, 0)
+  if terms.len == 0:
+    return
+
+  result.add(terms[0])
 
   for index in low(terms)+1..high(terms):
     let term = terms[index]
-    let prevTerm = terms[index-1]
-    setCompare(term, prevTerm, common, extra)
-
-  return common
+    var index2 = result.len
+    while index2 > 0:
+      dec index2
+      if result[index2] notin term:
+        result.delete(index2)
 
 proc pruneImpliedTerms(simpl: BExpSimplifier) =
   let exp = simpl.current
