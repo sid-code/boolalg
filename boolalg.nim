@@ -52,8 +52,10 @@ proc addStep(simpl: BExpSimplifier, next: BExp, comment: string) =
   simpl.history.add( (next, comment, nil) )
   simpl.current = next
 
-proc addSubstep(simpl: BExpSimplifier, subSimpl: BExpSimplifier, comment: string) =
-  simpl.history.add( (nil, comment, subSimpl) )
+proc addSubstep(simpl: BExpSimplifier, subSimpl: BExpSimplifier, comment: string = nil) =
+  let realComment = if isNil(comment): simpl.history[^1].comment else: comment
+
+  simpl.history.add( (nil, realComment, subSimpl) )
 
 proc addSubstep(simpl: BExpSimplifier, subStepStart: BExp, comment: string): BExpSimplifier =
   let subSimpl = newBExpSimplifier(subStepStart)
