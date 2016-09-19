@@ -493,7 +493,7 @@ proc pruneImpliedTerms(simpl: BExpSimplifier) =
     let indexToDelete = termsToDelete[index]
     let deletedTerm = terms[indexToDelete]
     terms.delete(indexToDelete)
-    simpl.addStep(sum(terms), "Remove term " & $deletedTerm)
+    simpl.addStep(sum(terms), "Remove term " & $deletedTerm & " by consensus")
 
   simpl.simplifySum()
 
