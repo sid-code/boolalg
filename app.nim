@@ -2,10 +2,17 @@ import dom
 
 import boolalg
 import boolexpparser
+import fakestreams
+import htmlgen
 
 proc simplify(str: cstring): cstring {.exportc.} =
   let exp = parse($str)
-  return $simplifyFull(exp)
+  let ss = newStringStream()
+
+  let simpl = simplifyFull(exp)
+  ss.writeHTML(simpl)
+
+  return ss.data
 
 proc simplifyClicked(e: Event) =
   asm """
@@ -13,7 +20,7 @@ proc simplifyClicked(e: Event) =
   var result = document.getElementById("result");
   try {
     var simplified = simplify(str);
-    result.innerText = simplified;
+    result.innerHTML = simplified;
   } catch (e) {
     result.innerHTML = "<span style='color:red'>" + e.stack.replace(/\n/g, '<br>') + "</span>";
   }
