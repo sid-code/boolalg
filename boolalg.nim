@@ -53,22 +53,12 @@ proc addStep(simpl: BExpSimplifier, next: BExp, comment: string) =
   simpl.current = next
 
 proc addSubstep(simpl: BExpSimplifier, subSimpl: BExpSimplifier, comment: string = nil) =
+  if subSimpl.current == subSimpl.history[0].res:
+    return
+
   let realComment = if isNil(comment): simpl.history[^1].comment else: comment
 
   simpl.history.add( (nil, realComment, subSimpl) )
-
-proc pruneUselessSteps(simpl: BExpSimplifier) =
-  # Go through and remove any substeps that start and end with the same thing
-  var index = simpl.history.len
-  while index > 0:
-    dec index
-
-    if not isNil(simpl.history[index].substep):
-      let substep = simpl.history[index].substep
-      substep.pruneUselessSteps()
-      if substep.current == substep.history[0].res:
-        simpl.history.delete(index)
-
 
 proc write(s: Stream, simpl: BExpSimplifier, indent = 0) =
   for step in simpl.history:
@@ -519,5 +509,4 @@ when isMainModule:
 
   let simpl = newBExpSimplifier(parse(paramStr(1)))
   simpl.simplify()
-  simpl.pruneUselessSteps()
   newFileStream(stdout).write(simpl)
