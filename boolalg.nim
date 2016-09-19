@@ -186,10 +186,12 @@ proc killPOS(simpl: BExpSimplifier) =
     of BENot:
       if exp.exp.kind in {BESum, BEProd}:
         # Apply DeMorgan's law: (a + b)' = a'b'
-        let sublhs = simpl.addSubstep(exp.exp.lhs, "Simplify left hand side")
-        let subrhs = simpl.addSubstep(exp.exp.rhs, "Simplify right hand side")
+        let sublhs = newBExpSimplifier(exp.exp.lhs, "Simplify left hand side")
+        let subrhs = newBExpSimplifier(exp.exp.rhs, "Simplify right hand side")
         sublhs.killPOS()
         subrhs.killPOS()
+        simpl.addSubstep(sublhs)
+        simpl.addSubstep(subrhs)
         if exp.exp.kind == BESum:
           simpl.addStep((-sublhs.current) * (-subrhs.current), "Apply DeMorgan's law: (a + b)' = a'b'")
         else:
@@ -199,23 +201,28 @@ proc killPOS(simpl: BExpSimplifier) =
         simpl.addStep(exp.exp.exp, "Eliminate double negative")
         simpl.killPOS()
       else:
-        let sub = simpl.addSubstep(exp.exp, "Simplify inside NOT")
+        let sub = newBExpSimplifier(exp.exp, "Simplify inside NOT")
         sub.killPOS()
+        simpl.addSubstep(sub)
         simpl.addStep(-sub.current, "Reapply NOT")
     of BESum:
-      let sublhs = simpl.addSubstep(exp.lhs, "Simplify left hand side")
-      let subrhs = simpl.addSubstep(exp.rhs, "Simplify right hand side")
+      let sublhs = newBExpSimplifier(exp.lhs, "Simplify left hand side")
+      let subrhs = newBExpSimplifier(exp.rhs, "Simplify right hand side")
       sublhs.killPOS()
       subrhs.killPOS()
+      simpl.addSubstep(sublhs)
+      simpl.addSubstep(subrhs)
       simpl.addStep(sublhs.current + subrhs.current, "Recombine left hand and right hand sides")
       return
     of BEProd:
       # This will distribute the product over any sums
 
-      let sublhs = simpl.addSubstep(exp.lhs, "Simplify left hand side")
-      let subrhs = simpl.addSubstep(exp.rhs, "Simplify right hand side")
+      let sublhs = newBExpSimplifier(exp.lhs, "Simplify left hand side")
+      let subrhs = newBExpSimplifier(exp.rhs, "Simplify right hand side")
       sublhs.killPOS()
       subrhs.killPOS()
+      simpl.addSubstep(sublhs)
+      simpl.addSubstep(subrhs)
       var lhs = sublhs.current
       var rhs = subrhs.current
       var temp: BExp
@@ -240,10 +247,12 @@ proc killPOS(simpl: BExpSimplifier) =
 
       simpl.addStep(rrlhs + rrrhs, "Distribute " & $lhs & " into " & $rhs)
 
-      let sublhs2 = simpl.addSubstep(rrlhs, "Simplify left hand side")
-      let subrhs2 = simpl.addSubstep(rrrhs, "Simplify right hand side")
+      let sublhs2 = newBExpSimplifier(rrlhs, "Simplify left hand side")
+      let subrhs2 = newBExpSimplifier(rrrhs, "Simplify right hand side")
       sublhs2.killPOS()
       subrhs2.killPOS()
+      simpl.addSubstep(sublhs2)
+      simpl.addSubstep(subrhs2)
       simpl.addStep(sublhs2.current + subrhs2.current, "Recombine left and right hand sides")
 
 proc simplifyProduct(simpl: BExpSimplifier)
@@ -260,8 +269,9 @@ proc simplify*(simpl: BExpSimplifier, prune = true) =
     of BEVar, BETrue, BEFalse:
       discard
     of BENot:
-      let subnot = simpl.addSubstep(sopexp.exp, "Simplify under NOT")
+      let subnot = newBExpSimplifier(sopexp.exp, "Simplify under NOT")
       subnot.simplify()
+      simpl.addSubstep(subnot)
       simpl.addStep(-subnot.current, "Put expression back under NOT")
     of BEProd:
       simpl.simplifyProduct()
@@ -280,8 +290,9 @@ proc simplifySum(simpl: BExpSimplifier) =
   # first pass: simplify, return true if a term is true, remove false terms
   for index, term in terms:
     # simplify
-    let subterm = simpl.addSubstep(term, "Simplify term of sum")
+    let subterm = newBExpSimplifier(term, "Simplify term of sum")
     subterm.simplify()
+    simpl.addSubstep(subterm)
     terms[index] = subterm.current
     simpl.addStep(sum(terms), "Recombine simplified term")
 
@@ -332,8 +343,9 @@ proc simplifyProduct(simpl: BExpSimplifier) =
   # first pass: simplify, return false if a term is false, remove true terms
   for index, term in terms:
     # simplify
-    let subterm = simpl.addSubstep(term, "Simplify term of product")
+    let subterm = newBExpSimplifier(term, "Simplify term of product")
     subterm.simplify()
+    simpl.addSubstep(subterm)
     terms[index] = subterm.current
     simpl.addStep(product(terms), "Recombine simplified term")
     if terms[index].kind == BEFalse:
@@ -406,8 +418,9 @@ proc simplifySumStep(simpl: BExpSimplifier): bool =
             simpl.addStep(sum(terms), "Recombine simplified inside")
 
             let newTerm = terms.pop()
-            let subnt = simpl.addSubstep(newTerm, "Simplify factored term")
+            let subnt = newBExpSimplifier(newTerm, "Simplify factored term")
             subnt.simplify()
+            simpl.addSubstep(subnt)
             terms.add(collectSumTerms(subnt.current))
 
 
