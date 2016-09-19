@@ -45,19 +45,17 @@ proc containsAll[T](s1, s2: openArray[T]): bool =
 proc setEquals[T](s1, s2: openArray[T]): bool =
   s1.len == s2.len and s1.containsAll(s2)
 
-proc setCompare[T](s1, s2: openArray[T]): tuple[common: seq[T], extra: seq[T]] =
-  newSeq(result.common, 0)
-  newSeq(result.extra, 0)
+proc setCompare[T](s1, s2: openArray[T], common, extra: var seq[T]) =
 
   for el in s1:
     if el notin s2:
-      result.extra.add(el)
+      extra.add(el)
     else:
-      result.common.add(el)
+      common.add(el)
 
   for el in s2:
     if el notin s1:
-      result.extra.add(el)
+      extra.add(el)
 
 proc filterFalseTerms(terms: var seq[BExp]) =
   terms.keepItIf(it != BFalse)
