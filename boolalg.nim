@@ -57,11 +57,6 @@ proc addSubstep(simpl: BExpSimplifier, subSimpl: BExpSimplifier, comment: string
 
   simpl.history.add( (nil, realComment, subSimpl) )
 
-proc addSubstep(simpl: BExpSimplifier, subStepStart: BExp, comment: string): BExpSimplifier =
-  let subSimpl = newBExpSimplifier(subStepStart)
-  simpl.addSubStep(subSimpl, comment)
-  return subSimpl
-
 proc pruneUselessSteps(simpl: BExpSimplifier) =
   # Go through and remove any substeps that start and end with the same thing
   var index = simpl.history.len
