@@ -17,17 +17,23 @@ type
     of BENot:
       exp*: BExp
 
+  BExpSimplStep = tuple[res: BExp, comment: string, substep: BExpSimplifier]
+  BExpSimplifier* = ref object
+    history: seq[BExpSimplStep]
+    current: BExp
+
+
 let BFalse = BExp(kind: BEFalse)
 let BTrue = BExp(kind: BETrue)
 
 
 proc v*(s: string): BExp = BExp(kind: BEVar, bvar: BVar(s))
 
-proc `*`*(lhs: BExp, rhs: BExp): BExp = BExp(kind: BEProd, lhs: lhs, rhs: rhs)
-proc `+`*(lhs: BExp, rhs: BExp): BExp = BExp(kind: BESum, lhs: lhs, rhs: rhs)
+proc `*`*(lhs, rhs: BExp): BExp = BExp(kind: BEProd, lhs: lhs, rhs: rhs)
+proc `+`*(lhs, rhs: BExp): BExp = BExp(kind: BESum, lhs: lhs, rhs: rhs)
 proc `-`*(exp: BExp): BExp = BExp(kind: BENot, exp: exp)
 proc `$`*(exp: BExp): string
-proc `==`*(lhs: BExp, rhs: BExp): bool
+proc `==`*(lhs, rhs: BExp): bool
 
 proc containsAll[T](s1, s2: openArray[T]): bool =
   for el in s2:
@@ -85,7 +91,7 @@ proc collectProdTerms(exp: BExp): seq[BExp] =
   else:
     result.add(exp)
 
-proc `==`*(lhs: BExp, rhs: BExp): bool =
+proc `==`*(lhs, rhs: BExp): bool =
   if lhs.kind != rhs.kind:
     return false
 
