@@ -21,8 +21,8 @@ type
 
   BExpSimplStep* = tuple[res: BExp, comment: string, substep: BExpSimplifier]
   BExpSimplifier* = ref object
-    history: seq[BExpSimplStep]
-    current: BExp
+    history*: seq[BExpSimplStep]
+    current*: BExp
 
 
 let BFalse* = BExp(kind: BEFalse)
@@ -60,7 +60,7 @@ proc addSubstep(simpl: BExpSimplifier, subSimpl: BExpSimplifier, comment: string
 
   simpl.history.add( (nil, realComment, subSimpl) )
 
-proc write(s: Stream, simpl: BExpSimplifier, indent = 0) =
+proc write*(s: Stream, simpl: BExpSimplifier, indent = 0) =
   for step in simpl.history:
     s.write(repeat(' ', indent))
     if step.substep.isNil:
