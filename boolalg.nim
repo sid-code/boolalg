@@ -65,7 +65,7 @@ proc write*(s: Stream, simpl: BExpSimplifier, indent = 0) =
     s.write(repeat(' ', indent))
     if step.substep.isNil:
       s.write($step.res)
-      s.write(repeat(' ', 30 - ($step.res).len))
+      s.write(repeat(' ', max(0, 30 - ($step.res).len)))
       s.write(step.comment)
     else:
       s.write(step.substep, indent + 1)
