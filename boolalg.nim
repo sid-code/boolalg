@@ -243,7 +243,7 @@ proc killPOS(simpl: BExpSimplifier) =
 proc simplifyProduct(simpl: BExpSimplifier)
 proc simplifySum(simpl: BExpSimplifier)
 proc simplifySumStep(simpl: BExpSimplifier): bool
-proc pruneImpliedTerms(simpl: BExpSimplifier)
+proc pruneImpliedTerms(simpl: BExpSimplifier): bool
 
 proc simplify*(simpl: BExpSimplifier, prune = true) =
   simpl.killPOS()
@@ -264,7 +264,7 @@ proc simplify*(simpl: BExpSimplifier, prune = true) =
       simpl.simplifySum()
 
   if prune:
-    simpl.pruneImpliedTerms()
+    discard simpl.pruneImpliedTerms()
 
 proc simplifySum(simpl: BExpSimplifier) =
   let exp = simpl.current
@@ -447,7 +447,8 @@ proc collectCommonTerms(terms: seq[seq[BExp]]): seq[BExp] =
       if result[index2] notin term:
         result.delete(index2)
 
-proc pruneImpliedTerms(simpl: BExpSimplifier) =
+proc pruneImpliedTerms(simpl: BExpSimplifier): bool =
+  result = false
   let exp = simpl.current
   if exp.kind != BESum:
     return
@@ -484,12 +485,15 @@ proc pruneImpliedTerms(simpl: BExpSimplifier) =
         prodsimpl.simplifyProduct()
         if prodsimpl.current == BTrue:
           simpl.addStep(BTrue, "If a sum contains TRUE, its value is TRUE")
+          result = true
           return
 
         terms[index] = prodsimpl.current
         simpl.addStep(sum(terms), "Remove terms guaranteed to be true")
+        result = true
     else:
       termsToDelete.add(index)
+      result = true
 
   var index = termsToDelete.len
   while index > 0:
