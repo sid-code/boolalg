@@ -282,7 +282,7 @@ proc simplifySum(simpl: BExpSimplifier) =
     simpl.addStep(sum(terms), "Recombine simplified term")
 
     if terms[index].kind == BETrue:
-      simpl.addStep(term, "If TRUE appears in a sum, whole result is true")
+      simpl.addStep(term, "If a sum contains TRUE, its value is TRUE")
       return
 
   terms = deduplicate(terms)
