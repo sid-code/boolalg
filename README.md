@@ -41,7 +41,6 @@ This application is hosted [here][1].
 ## Todo List
 
  * API documentation
- * Use shunting-yard for parsing rather than recursive descent
 
 ## License
 
