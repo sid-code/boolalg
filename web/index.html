@@ -8,13 +8,13 @@
 
   <body>
     <h2>Boolean algebra expression simplifier</h2>
-    <p>Enter an expression: <input type="text" id="expression" value="(-a)b + ac + bc"></input><button id="simplify">simplify</button>
+    <p>Enter an expression: <input type="text" id="expression" value="a'b + ac + bc"></input><button id="simplify">simplify</button>
     <ul>
       <li>use <tt>a+b</tt> for <tt>a OR b</tt></li>
       <li>use <tt>ab</tt> for <tt>a AND b</tt></li>
       <li>use parentheses as necessary</li>
-      <li>use <tt>-a</tt> for <tt>a'</tt></li>
-      <li><tt>a-bc</tt> will be interpreted as <tt>(a)(-b)(c)</tt></li>
+      <li>use <tt>a'</tt> for <tt>NOT a</tt></li>
+      <li><tt>a'bc'</tt> will be interpreted as <tt>(NOT a) AND b AND (NOT c)</tt></li>
     </ul>
 
     <p><span id="result">result will appear here</span>
