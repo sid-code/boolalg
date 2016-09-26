@@ -5,7 +5,7 @@ import strutils
 type
   BVar = distinct string
 
-  BExpKind = enum
+  BExpKind* = enum
     BEVar, BESum, BEProd, BETrue, BEFalse, BENot
 
   BExp* = ref object
