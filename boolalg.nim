@@ -3,7 +3,7 @@ import streams
 import strutils
 
 type
-  BVar = distinct string
+  BVar* = distinct string
 
   BExpKind* = enum
     BEVar, BESum, BEProd, BETrue, BEFalse, BENot
