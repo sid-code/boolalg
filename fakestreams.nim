@@ -1,4 +1,8 @@
-type
+# This code exists because Nim's JS backend doesn't have the `streams` library.
+# This provides an extremely rudimentary implementation of StringStream that
+# works well enough for this program's purposes.
+
+type 
   StreamObj = object of RootObj
 
   Stream* = ref StreamObj
