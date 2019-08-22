@@ -14,7 +14,6 @@ type
   BExpTokenizer = ref object
     text: string
     pos: int
-    parenDepth: int
 
   BExpParser = ref object
     tz: BExpTokenizer
@@ -34,7 +33,6 @@ proc newBExpTokenizer(text: string): BExpTokenizer =
   new result
   result.text = text
   result.pos = 0
-  result.parenDepth = 0
 
 proc next(tz: BExpTokenizer, peek = false): BExpToken =
 
