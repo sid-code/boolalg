@@ -52,15 +52,15 @@ proc addStep(simpl: BExpSimplifier, next: BExp, comment: string) =
   simpl.history.add( (next, comment, nil) )
   simpl.current = next
 
-proc addSubstep(simpl: BExpSimplifier, subSimpl: BExpSimplifier, comment: string = nil) =
+proc addSubstep(simpl: BExpSimplifier, subSimpl: BExpSimplifier, comment: string = "") =
   if subSimpl.current == subSimpl.history[0].res:
     return
 
-  let realComment = if isNil(comment): simpl.history[^1].comment else: comment
+  let realComment = if comment == "": simpl.history[^1].comment else: comment
 
   simpl.history.add( (nil, realComment, subSimpl) )
 
-proc write*(s: Stream, simpl: BExpSimplifier, indent = 0) =
+proc writeToStream*(simpl: BExpSimplifier, s: Stream, indent = 0) =
   for step in simpl.history:
     s.write(repeat(' ', indent))
     if step.substep.isNil:
@@ -68,7 +68,7 @@ proc write*(s: Stream, simpl: BExpSimplifier, indent = 0) =
       s.write(repeat(' ', max(0, 30 - ($step.res).len)))
       s.write(step.comment)
     else:
-      s.write(step.substep, indent + 1)
+      writeToStream(step.substep, s, indent + 1)
     s.write("\n")
 
 
@@ -517,4 +517,4 @@ when isMainModule:
 
   let simpl = newBExpSimplifier(parse(paramStr(1)))
   simpl.simplify()
-  newFileStream(stdout).write(simpl)
+  simpl.writeToStream(newFileStream(stdout))
