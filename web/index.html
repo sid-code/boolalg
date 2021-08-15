@@ -8,6 +8,11 @@
 
   <body>
     <h2>Boolean algebra expression simplifier</h2>
+    <p><b>Disclaimer:</b> This simplifier uses an ad-hoc best-effort algorithm
+    that runs in polynomial time. It is also very buggy. It will not simplify
+    arbitrary boolean algebra expressions, but it can do most you'd encounter
+    in an introductory undergraduate course ;)
+
     <p>Enter an expression: <input type="text" id="expression" value="a'b + ac + bc"></input><button id="simplify">simplify</button>
     <ul>
       <li>use <tt>a+b</tt> for <tt>a OR b</tt></li>
